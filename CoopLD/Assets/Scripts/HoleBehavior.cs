@@ -2,52 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HoleBehavior : MonoBehaviour {
+public class HoleBehavior : WorkableObject {
 
-    public bool working;
-    private int timer;
-    public int timerlength = 600;
-    private Renderer renderer;
-    private int workingTimer;
-    public int workingTime = 100;
+    
+    public int timeToComplete = 600;
+    private Renderer theRenderer;
 
 	// Use this for initialization
-	void Start () {
-        timer = 0;
-        workingTimer = 0;
-        renderer = GetComponent<Renderer>();
-        renderer.enabled = false;
+	public override void Start () {
+        base.Start();
+        theRenderer = GetComponent<Renderer>();
+        theRenderer.enabled = true;
     }
 	
 	// Update is called once per frame
-	void Update () {
-        timer++;
-
-        //create the hole after timerlength has passed
-        if(timer >= timerlength)
-        {
-            timer = 0;
-            renderer.enabled = true;
-        }
+	public override void Update () {
+        base.Update();
 
         //fix the hole if worked for workingtime
-
-        if (working)
+        if(timeWorking >= timeToComplete)
         {
-            if (workingTimer >= workingTime)
-            {
-                Debug.Log("done Working");
-                renderer.enabled = false;
-                timer = 0;
-            }
-            else
-            {
-                workingTimer++;
-            }
+            FixHole();
+        }
+    }
+
+    private void FixHole()
+    {
+        Debug.Log("done Working");
+        theRenderer.enabled = false;
+    }
+
+    public bool BlowHole()
+    {
+        if (theRenderer.enabled == true)
+        {
+            //if already blown return false
+            return false;
         }
         else
         {
-            workingTimer = 0;
+            //otherwise blow open the hole and return true
+            theRenderer.enabled = true;
+            return true;
         }
     }
 }

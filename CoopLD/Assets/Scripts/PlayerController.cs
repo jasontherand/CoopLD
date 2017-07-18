@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
 
     //Is the player in front of a ladder
     private bool climbable;
-    private Collider overHole;
+    private Collider workableObject;
 
     //player's rgidbody
     private Rigidbody rb;
@@ -44,46 +44,35 @@ public class PlayerController : MonoBehaviour {
         }
 
         rb.velocity = movement;
-
-        //Handle Actions
-        bool doAction = Input.GetButton("DoAction");
-
-        if (doAction)
-        {
-            if(overHole != null)
-            {
-                overHole.GetComponent<HoleBehavior>().working = true;
-            }
-        }
-        else
-        {
-            if (overHole != null)
-            {
-                overHole.GetComponent<HoleBehavior>().working = false;
-            }
-
-        }
+        
     }
     private void OnTriggerEnter(Collider theCollider)
     {
+        Debug.Log("collided with a " + theCollider.tag);
+        //try to get a workable object
+        WorkableObject workableObject = theCollider.GetComponentInParent<WorkableObject>();
+        if (workableObject)
+        {
+            workableObject.playerActive = true;
+        }
+        //check if its a ladder
         switch (theCollider.tag) {
             case "Ladder": MakeClimbable();
-                break;
-            case "Hole": overHole = theCollider;
-                Debug.Log("OverHole");
                 break;
         }
     }
     private void OnTriggerExit(Collider theCollider)
     {
+        WorkableObject workableObject = theCollider.GetComponentInParent<WorkableObject>();
+        if (workableObject)
+        {
+            workableObject.playerActive = false;
+        }
+
         switch (theCollider.tag)
         {
             case "Ladder":
                 RemoveClimbable();
-                break;
-            case "Hole":
-                overHole = null;
-                Debug.Log("NotOverHole");
                 break;
         }
     }
