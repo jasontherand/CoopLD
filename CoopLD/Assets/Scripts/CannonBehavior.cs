@@ -10,6 +10,7 @@ public class CannonBehavior : WorkableObject {
     public override void Start () {
         base.Start();
         theAnimator = GetComponent<Animator>();
+        workable = true;
 	}
 	
 	// Update is called once per frame

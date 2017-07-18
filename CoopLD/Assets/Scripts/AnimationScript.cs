@@ -11,11 +11,13 @@ public class AnimationScript : MonoBehaviour
 
     Animator anim;
     Rigidbody rb;
+    PlayerController pc;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        pc = GetComponent<PlayerController>();
     }
 
 
@@ -46,6 +48,23 @@ public class AnimationScript : MonoBehaviour
         {
             Flip();
         };
+
+        if (Input.GetButton("DoAction"))
+        {
+            if (pc.HasWorkableObject())
+            {
+                if (pc.GetWorkableObject().workable)
+                {
+                    //tell the animator to work
+                    Debug.Log("working1");
+                    anim.SetBool("Working", true);
+                }
+            }
+        }
+        else
+        {
+            anim.SetBool("Working", false);
+        }
     }
 
 

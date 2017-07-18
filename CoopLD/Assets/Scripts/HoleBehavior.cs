@@ -13,6 +13,7 @@ public class HoleBehavior : WorkableObject {
         base.Start();
         theRenderer = GetComponent<Renderer>();
         theRenderer.enabled = true;
+        workable = true;
     }
 	
 	// Update is called once per frame
@@ -28,6 +29,7 @@ public class HoleBehavior : WorkableObject {
 
     private void FixHole()
     {
+        workable = false;
         Debug.Log("done Working");
         theRenderer.enabled = false;
     }
@@ -43,6 +45,7 @@ public class HoleBehavior : WorkableObject {
         {
             //otherwise blow open the hole and return true
             theRenderer.enabled = true;
+            workable = true;
             return true;
         }
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorkableObject : MonoBehaviour {
 
     public bool playerActive;
+    public bool workable;
     public int timeWorking;
 
 	// Use this for initialization
