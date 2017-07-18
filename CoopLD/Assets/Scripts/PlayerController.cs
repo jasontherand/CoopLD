@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
 
     //Is the player in front of a ladder
     private bool climbable;
-
+    private Collider overHole;
 
     //player's rgidbody
     private Rigidbody rb;
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        climbable = false;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
@@ -29,6 +30,8 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
+
+        //Handle Movement
         float moveHorizontal = Input.GetAxis("Horizontal");
 
         Vector3 movement = rb.velocity;
@@ -42,30 +45,49 @@ public class PlayerController : MonoBehaviour {
 
         rb.velocity = movement;
 
+        //Handle Actions
+        bool doAction = Input.GetButton("DoAction");
+
+        if (doAction)
+        {
+            if(overHole != null)
+            {
+                overHole.GetComponent<HoleBehavior>().working = true;
+            }
+        }
+        else
+        {
+            if (overHole != null)
+            {
+                overHole.GetComponent<HoleBehavior>().working = false;
+            }
+
+        }
     }
     private void OnTriggerEnter(Collider theCollider)
     {
-        Debug.Log("Triggering");
-       if(theCollider.tag == "Ladder")
-        {
-            Debug.Log("Ladder");
-            MakeClimbable();
+        switch (theCollider.tag) {
+            case "Ladder": MakeClimbable();
+                break;
+            case "Hole": overHole = theCollider;
+                Debug.Log("OverHole");
+                break;
         }
     }
     private void OnTriggerExit(Collider theCollider)
     {
-        if (theCollider.tag == "Ladder")
+        switch (theCollider.tag)
         {
-            Debug.Log("Ladder");
-            RemoveClimbable();
+            case "Ladder":
+                RemoveClimbable();
+                break;
+            case "Hole":
+                overHole = null;
+                Debug.Log("NotOverHole");
+                break;
         }
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Colliding");
-    }
-
+    
 
     void MakeClimbable()
     {
